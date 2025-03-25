@@ -18,7 +18,7 @@ import {
 
 import { createLocationToUnitSqIdxs } from "./add-units"
 
-export function boardState(
+export function fenToBoardState(
     fen: string, 
     horizontalExtendLimit: number,
     verticalExtendLimit: number,

@@ -33,3 +33,10 @@ export type BoardState = {
         [key: string]: Idx[]
     }
 };
+
+export type CastlingRights = {
+    K: boolean; // white king side
+    Q: boolean; // white queen side
+    k: boolean; // black king side
+    q: boolean; // black queen side
+}
