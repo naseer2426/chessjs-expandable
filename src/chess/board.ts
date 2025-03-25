@@ -3,7 +3,7 @@ import {
     Col, 
     NON_EXISTENT_SQUARE, 
     AddUnit, 
-    BoardState, 
+    Board, 
 } from "./types"
 import { 
     getColumnNotation, 
@@ -18,13 +18,13 @@ import {
 
 import { createLocationToUnitSqIdxs } from "./add-units"
 
-export function fenToBoardState(
+export function fenToBoard(
     fen: string, 
     horizontalExtendLimit: number,
     verticalExtendLimit: number,
     horizontalAddUnit: AddUnit,
     verticalAddUnit: AddUnit
-): BoardState {
+): Board {
     const rawRows = modifiedFenToRawRows(fen)
     return createBoard(
         rawRows, 
@@ -41,7 +41,7 @@ function createBoard(
     verticalExtendLimit: number,
     horizontalAddUnit: AddUnit,
     verticalAddUnit: AddUnit
-): BoardState {
+): Board {
     const toAdd: {
         top: number,
         bottom: number,

@@ -1,5 +1,5 @@
-import { BoardState, AddUnit, CastlingRights } from "./types"
-import { fenToBoardState } from "./board"
+import { Board, AddUnit, CastlingRights } from "./types"
+import { fenToBoard } from "./board"
 import { 
     fenToTurn, 
     fenToCastlingRights, 
@@ -8,7 +8,7 @@ import {
     fenToFullmoveNumber
 } from "./extra"
 export class Chess {
-    private boardState: BoardState;
+    private board: Board;
     private turn: "w" | "b";
     private castlingRights: CastlingRights;
     private enPassantTarget: string | null; // e.g. "e3"
@@ -22,7 +22,7 @@ export class Chess {
         horizontalAddUnit: AddUnit,
         verticalAddUnit: AddUnit
     ) {
-        this.boardState = fenToBoardState(
+        this.board = fenToBoard(
             fen, 
             horizontalExtendLimit, 
             verticalExtendLimit, 

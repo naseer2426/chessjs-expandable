@@ -24,7 +24,7 @@ export type Idx = {
     col: number;
 }
 
-export type BoardState = {
+export type Board = {
     rows: Row[]
     locationToIdx: {
         [key: string]: Idx
