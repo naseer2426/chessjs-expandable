@@ -1,7 +1,9 @@
 {
     "name": "chessjs-expandable",
     "version": "0.0.2",
-    "main": "index.js",
+    "main": "dist/index.cjs.js",
+    "module": "dist/index.es.js",
+    "types": "dist/index.d.ts",
     "scripts": {
         "build": "vite build",
         "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,5 +17,16 @@
         "typescript": "^5.8.2",
         "vite": "^6.2.3",
         "vite-plugin-dts": "^4.5.3"
+    },
+    "files": [
+        "dist",
+        "README.md"
+    ],
+    "exports": {
+        ".": {
+            "import": "./dist/index.es.js",
+            "require": "./dist/index.cjs.js",
+            "types": "./dist/index.d.ts"
+        }
     }
 }
