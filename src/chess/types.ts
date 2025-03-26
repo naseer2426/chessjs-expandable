@@ -40,3 +40,25 @@ export type CastlingRights = {
     k: boolean; // black king side
     q: boolean; // black queen side
 }
+
+export enum MoveType {
+    MOVE = "move",
+    EXTEND = "extend"
+}
+
+export enum GameStatus {
+    IN_PROGRESS = "in_progress",
+    BLACK_WON = "black_won",
+    WHITE_WON = "white_won",
+    DRAW = "draw"
+}
+
+export type BoardMove = {
+    moveType: MoveType;
+    // Have value when moveType is MOVE
+    sourceSquare?: string;
+    targetSquare?: string;
+    piece?: string;
+    // Has value when moveType is EXTEND
+    expandLocation?: string;
+}

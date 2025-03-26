@@ -42,7 +42,7 @@ export function modifiedFenToRawRows(fen: string): Row[] {
                 colIdx += 1;
             } else { // if its not empty square or non-existent square, it must be a piece
                 row.push({
-                    piece: fenToPieceCode(unit),
+                    piece:unit,
                     rank: currentRowIdx.toString(),
                     file: getColumnNotation(colIdx)
                 })
@@ -95,15 +95,6 @@ export function getFenColIdx(file: string): number {
         return charCode - 97
     }
     return - (charCode - 64)
-}
-
-export function fenToPieceCode(piece: string): string {
-    // black piece
-    if (piece.toLowerCase() === piece) {
-        return ("b" + piece.toUpperCase());
-    }
-    // white piece
-    return ("w" + piece.toUpperCase());
 }
 
 export function createLocationToIdx(rows: Row[]): {[key: string]: Idx} {
