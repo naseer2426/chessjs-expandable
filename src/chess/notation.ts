@@ -44,7 +44,7 @@ export const notationToBoardMove = (notation:string):BoardMove=>{
     }
 }
 
-const boardMovePieceToPiece = (piece:string):string=>{
+export const boardMovePieceToPiece = (piece:string):string=>{
     if (piece.startsWith("w")) {
         return piece.slice(1);
     }
