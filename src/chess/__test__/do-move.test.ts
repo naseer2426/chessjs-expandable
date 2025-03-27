@@ -2,6 +2,9 @@ import {Chess} from "../index"
 import { MoveType } from "../types";
 
 describe("do move",()=>{
+    /*
+        TODO: add test cases for castling right updates
+    */
     test("simple moves",()=>{
         const chess = new Chess(
             "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
