@@ -4,8 +4,6 @@ import {
     CastlingRights, 
     BoardMove, 
     GameStatus,
-    Row,
-    EMPTY_SQUARE
 } from "./types"
 import { fenToBoard } from "./board"
 import { 
@@ -13,8 +11,12 @@ import {
     fenToCastlingRights, 
     fenToEnPassantTarget, 
     fenToHalfmoveClock, 
-    fenToFullmoveNumber
-} from "./extra"
+    fenToFullmoveNumber,
+    getRowFen,
+    getEnPassantNotation,
+    getCastlingRightsNotation
+} from "./fen"
+import {boardMoveToNotation} from "./notation"
 import {areAllSqNonExistent} from "./squares"
 
 export class Chess {
@@ -68,20 +70,15 @@ export class Chess {
         return this.moveHistory;
     }
 
-    public getCurrentFen():string {
-        return `${this.getBoardFen()} ${this.turn} ${this.getCastlingRightsNotation()} ${this.getEnPassantNotation()} ${this.halfmoveClock} ${this.fullmoveNumber}`
+    private recordBoardMove(move:BoardMove):void {
+        this.moveHistory.push(boardMoveToNotation(move));
     }
 
-    private getCastlingRightsNotation():string {
-        let notation = "";
-        if (this.castlingRights.K) notation += "K";
-        if (this.castlingRights.Q) notation += "Q";
-        if (this.castlingRights.k) notation += "k";
-        if (this.castlingRights.q) notation += "q";
-        if (notation === "") {
-            return "-";
-        }
-        return notation;
+    public getCurrentFen():string {
+        const boardFen = this.getBoardFen();
+        const castlingRightsNotation = getCastlingRightsNotation(this.castlingRights);
+        const enPassantNotation = getEnPassantNotation(this.enPassantTarget);
+        return `${boardFen} ${this.turn} ${castlingRightsNotation} ${enPassantNotation} ${this.halfmoveClock} ${this.fullmoveNumber}`
     }
 
     private getBoardFen():string {
@@ -90,46 +87,9 @@ export class Chess {
             if (areAllSqNonExistent(row)) {
                 return;
             }
-            boardFen += this.getRowFen(row) + "/";
+            boardFen += getRowFen(row) + "/";
         })
         return boardFen.slice(0, -1); // to remove the last "/"
-    }
-
-    private getRowFen(row:Row):string {
-        let rowFen = ""
-        if (row[0].rank === "8") {
-            rowFen += "#"
-        }
-        let addFileDisambiguator = false;
-        if (row[0].file !== "a") {
-            addFileDisambiguator = true;
-        }
-        let currEmptySqCount = 0;
-        row.forEach(square => {
-            if (addFileDisambiguator && square.file === "a") {
-                rowFen += "$";
-            }
-            if (square.piece === EMPTY_SQUARE) {
-                currEmptySqCount++;
-            } else {
-                if (currEmptySqCount > 0) {
-                    rowFen += currEmptySqCount.toString();
-                    currEmptySqCount = 0;
-                }
-                rowFen += square.piece;
-            }
-        })
-        if (currEmptySqCount > 0) {
-            rowFen += currEmptySqCount.toString();
-        }
-        return rowFen;
-    }
-
-    private getEnPassantNotation():string {
-        if (this.enPassantTarget === null) {
-            return "-";
-        }
-        return this.enPassantTarget;
     }
     
 }

@@ -55,6 +55,10 @@ function createBoard(
     }
     const paddedRows = addNesPaddingToRows(rawRows, toAdd, horizontalExtendLimit, verticalExtendLimit)
     return {
+        horizontalExtendLimit,
+        verticalExtendLimit,
+        horizontalAddUnit,
+        verticalAddUnit,
         rows: paddedRows,
         locationToIdx: createLocationToIdx(paddedRows),
         locationToUnitSqIdxs: createLocationToUnitSqIdxs(paddedRows, horizontalAddUnit, verticalAddUnit)
