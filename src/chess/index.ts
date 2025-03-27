@@ -16,7 +16,7 @@ import {
     getEnPassantNotation,
     getCastlingRightsNotation
 } from "./fen"
-import {boardMoveToNotation} from "./notation"
+import {boardMoveToNotation, notationToBoardMove} from "./notation"
 import {areAllSqNonExistent} from "./squares"
 
 export class Chess {
@@ -52,18 +52,28 @@ export class Chess {
     }
 
     public moveFromBoard(move:BoardMove):boolean {
-        //TODO: implement
+        if (!this.isLegalMove(move)) {
+            return false;
+        }
+        this.doLegalMove(move);
+        this.recordBoardMove(move);
+        this.setGameStatus();
         return true;
     }
 
     public moveFromNotation(notation:string):boolean {
-        //TODO: implement
-        return true;
+        const boardMove = notationToBoardMove(notation);
+        return this.moveFromBoard(boardMove);
     }
 
     public getGameStatus():GameStatus {
         //TODO: implement
         return GameStatus.IN_PROGRESS;
+    }
+
+    private setGameStatus():void {
+        //TODO: implement
+        return;
     }
 
     public getMoveHistory():string[] {
@@ -91,5 +101,12 @@ export class Chess {
         })
         return boardFen.slice(0, -1); // to remove the last "/"
     }
+
+    private doLegalMove(move:BoardMove):void {
+        return;
+    }
     
+    private isLegalMove(move:BoardMove):boolean {
+        return true;
+    }
 }
