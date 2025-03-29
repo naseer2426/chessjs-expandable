@@ -18,7 +18,7 @@ import {
     getEnPassantNotation,
     getCastlingRightsNotation
 } from "./fen"
-import {boardMovePieceToPiece, boardMoveToNotation, notationToBoardMove} from "./notation"
+import {boardMoveToNotation, notationToBoardMove} from "./notation"
 import {areAllSqNonExistent} from "./squares"
 import { castlingRightUpdates, getEnPassantTargetSq, getRookMoveForCastle, isCastleMove, isMoveCapture, isPawnMove } from "./moves/util"
 
@@ -162,10 +162,13 @@ export class Chess {
     }
 
     private doSimpleMove(move:BoardMove):void {
+        if (move.moveType !== MoveType.MOVE) {
+            return;
+        }
         const sourceIdx = this.board.locationToIdx[move.sourceSquare!];
         const targetIdx = this.board.locationToIdx[move.targetSquare!];
         this.board.rows[sourceIdx.row][sourceIdx.col].piece = EMPTY_SQUARE;
-        this.board.rows[targetIdx.row][targetIdx.col].piece = boardMovePieceToPiece(move.piece!);
+        this.board.rows[targetIdx.row][targetIdx.col].piece = move.piece!;
     }
     
 }

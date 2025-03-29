@@ -1,5 +1,5 @@
 import { CastlingRights, EMPTY_SQUARE, Row } from "./types";
-
+import { pieceToFenPiece } from "./notation";
 export function fenToTurn(fen: string): "w" | "b" {
     const fenSplit = fen.split(" ");
     if (fenSplit.length < 2) {
@@ -75,7 +75,7 @@ export function getRowFen(row: Row): string {
                 rowFen += currEmptySqCount.toString();
                 currEmptySqCount = 0;
             }
-            rowFen += square.piece;
+            rowFen += pieceToFenPiece(square.piece);
         }
     })
     if (currEmptySqCount > 0) {

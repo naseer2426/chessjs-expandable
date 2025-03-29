@@ -9,7 +9,7 @@ describe("notation",()=>{
             targetSquare: "e5"
         }
         const notation = boardMoveToNotation(move)
-        expect(notation).toBe("P|e4|e5")
+        expect(notation).toBe("wP|e4|e5")
     })
     test("boardMoveToNotation black pawn move",()=>{
         const move = {
@@ -19,10 +19,10 @@ describe("notation",()=>{
             targetSquare: "e4"
         }
         const notation = boardMoveToNotation(move)
-        expect(notation).toBe("p|e5|e4")
+        expect(notation).toBe("bP|e5|e4")
     })
     test("notationToBoardMove white pawn move",()=>{
-        const notation = "P|e4|e5"
+        const notation = "wP|e4|e5"
         const move = notationToBoardMove(notation)
         expect(move).toEqual({
             moveType: MoveType.MOVE,
@@ -32,7 +32,7 @@ describe("notation",()=>{
         })
     })
     test("notationToBoardMove black pawn move",()=>{
-        const notation = "p|e5|e4"
+        const notation = "bP|e5|e4"
         const move = notationToBoardMove(notation)
         expect(move).toEqual({
             moveType: MoveType.MOVE,

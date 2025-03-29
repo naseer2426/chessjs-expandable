@@ -29,7 +29,7 @@ describe("do move",()=>{
         }
         chess.moveFromBoard(move);
         expect(chess.getCurrentFen()).toBe("#E$rnbqkbnrE/E$ppppppppE/E$8E/E$8E/E$4P3E/E$8E/E$PPPP1PPPE/E$RNBQKBNRE b KQkq e3 0 1");
-        expect(chess.getMoveHistory()).toEqual(["P|e2|e4"]);
+        expect(chess.getMoveHistory()).toEqual(["wP|e2|e4"]);
 
         //e5
         const move2 = {
@@ -40,6 +40,6 @@ describe("do move",()=>{
         }
         chess.moveFromBoard(move2);
         expect(chess.getCurrentFen()).toBe("#E$rnbqkbnrE/E$pppp1pppE/E$8E/E$4p3E/E$4P3E/E$8E/E$PPPP1PPPE/E$RNBQKBNRE w KQkq e6 0 2");
-        expect(chess.getMoveHistory()).toEqual(["P|e2|e4", "p|e7|e5"]);
+        expect(chess.getMoveHistory()).toEqual(["wP|e2|e4", "bP|e7|e5"]);
     })
 })

@@ -18,7 +18,7 @@ export const boardMoveToNotation = (move:BoardMove):string=>{
         checkmates and disambiguity.
     */
    
-    const piece = boardMovePieceToPiece(move.piece!);
+    const piece = move.piece!;
     const sourceSquare = move.sourceSquare!;
     const targetSquare = move.targetSquare!;
 
@@ -38,20 +38,24 @@ export const notationToBoardMove = (notation:string):BoardMove=>{
 
     return {
         moveType: MoveType.MOVE,
-        piece: pieceToBoardMovePiece(piece),
+        piece:piece,
         sourceSquare,
         targetSquare
     }
 }
 
-export const boardMovePieceToPiece = (piece:string):string=>{
+export const pieceToFenPiece = (piece:string):string=>{
+    if (piece.length < 2) {
+        // empty square or non existent square
+        return piece;
+    }
     if (piece.startsWith("w")) {
         return piece.slice(1);
     }
     return piece.slice(1).toLowerCase();
 }
 
-const pieceToBoardMovePiece = (piece:string):string=>{
+export const fenPieceToPiece = (piece:string):string=>{
     if (piece.toLowerCase() === piece) {
         return `b${piece.toUpperCase()}`
     }

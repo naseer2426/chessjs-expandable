@@ -12,7 +12,7 @@ export type AddUnit = {
 }
 
 export type Square = {
-    piece: string; // could be a piece or empty/non-existent square. The piece symbols stored here are similar to FEN notation. capital letters are white, lowercase are black.
+    piece: string; // could be a piece or empty/non-existent square.
     rank: string;
     file: string;
 }
@@ -68,8 +68,6 @@ export type BoardMove = {
         the piece symbol will always be uppercase.
         the reason this is different from the piece stored in board.rows is because
         this value will come from fork of the existing react-chessboard package.
-
-        board is using FEN notation for pieces. because it makes it easier to convert to FEN
     */
     piece?: string; 
 

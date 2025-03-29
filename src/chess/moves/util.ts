@@ -21,7 +21,7 @@ export const isCastleMove = (move:BoardMove):boolean => {
     if (move.moveType !== MoveType.MOVE) {
         return false;
     }
-    if (move.piece!.toLowerCase() !== "k") {
+    if (move.piece!.slice(1).toLowerCase() !== "k") {
         return false;
     }
     if (move.sourceSquare! === "e1" && (move.targetSquare! === "g1" || move.targetSquare! === "c1")) {
@@ -72,11 +72,11 @@ export const castlingRightUpdates = (move:BoardMove):Partial<CastlingRights> => 
     if (move.moveType !== MoveType.MOVE) {
         return {};
     }
-    if (move.piece!.toLowerCase() !== "r" && move.piece!.toLowerCase() !== "k") {
+    if (move.piece!.slice(1).toLowerCase() !== "r" && move.piece!.slice(1).toLowerCase() !== "k") {
         return {};
     }
     const isWhite = move.piece!.includes("w");
-    if (move.piece!.toLowerCase() === "k") {
+    if (move.piece!.slice(1).toLowerCase() === "k") {
         // king move means you have lost both castling rights
         return isWhite ? {K: false, Q: false} : {k: false, q: false};
     }

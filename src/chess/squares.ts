@@ -5,7 +5,7 @@ import {
     EMPTY_SQUARE,
     Idx
 } from "./types"
-
+import { fenPieceToPiece } from "./notation"
 export function modifiedFenToRawRows(fen: string): Row[] {
     // cut off any move, castling, etc info from the end. we're only interested in position information
     fen = fen.replace(/ .+$/, "");
@@ -42,7 +42,7 @@ export function modifiedFenToRawRows(fen: string): Row[] {
                 colIdx += 1;
             } else { // if its not empty square or non-existent square, it must be a piece
                 row.push({
-                    piece:unit,
+                    piece: fenPieceToPiece(unit),
                     rank: currentRowIdx.toString(),
                     file: getColumnNotation(colIdx)
                 })
