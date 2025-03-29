@@ -54,7 +54,6 @@ function createBoard(
         right: horizontalAddUnit.x - numNonExistentColsRightN(rawRows, horizontalAddUnit.x)
     }
     const paddedRows = addNesPaddingToRows(rawRows, toAdd, horizontalExtendLimit, verticalExtendLimit)
-    console.log("paddedRows", paddedRows)
     return {
         horizontalExtendLimit,
         verticalExtendLimit,

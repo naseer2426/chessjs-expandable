@@ -2,7 +2,7 @@ import {
     Board, 
     AddUnit, 
     CastlingRights, 
-    BoardMove, 
+    Move, 
     GameStatus,
     MoveType,
     EMPTY_SQUARE,
@@ -20,7 +20,14 @@ import {
 } from "./fen"
 import {boardMoveToNotation, notationToBoardMove} from "./notation"
 import {areAllSqNonExistent} from "./squares"
-import { castlingRightUpdates, getEnPassantTargetSq, getRookMoveForCastle, isCastleMove, isMoveCapture, isPawnMove } from "./moves/util"
+import { 
+    castlingRightUpdates, 
+    getEnPassantTargetSq, 
+    getRookMoveForCastle, 
+    isCastleMove, 
+    isMoveCapture, 
+    isPawnMove
+} from "./metrics"
 
 export class Chess {
     private board: Board;
@@ -54,7 +61,7 @@ export class Chess {
         this.moveHistory = []
     }
 
-    public moveFromBoard(move:BoardMove):boolean {
+    public moveFromBoard(move:Move):boolean {
         if (!this.isLegalMove(move)) {
             return false;
         }
@@ -64,7 +71,7 @@ export class Chess {
         return true;
     }
 
-    private isLegalMove(move:BoardMove):boolean {
+    private isLegalMove(move:Move):boolean {
         return true;
     }
 
@@ -105,7 +112,7 @@ export class Chess {
         return boardFen.slice(0, -1); // to remove the last "/"
     }
 
-    private doLegalMove(move:BoardMove):void {
+    private doLegalMove(move:Move):void {
         if (move.moveType === MoveType.EXTEND) {
             this.board.locationToUnitSqIdxs[move.expandLocation!].forEach(sqIdx => {
                 this.board.rows[sqIdx.row][sqIdx.col].piece = EMPTY_SQUARE;
@@ -124,7 +131,7 @@ export class Chess {
         needs to be called before move is done because it depends
         on the state of the board before move happens
     */
-    private recordMoveMetrics(move:BoardMove):void {
+    private recordMoveMetrics(move:Move):void {
         // history
         this.moveHistory.push(boardMoveToNotation(move));
 
@@ -153,7 +160,7 @@ export class Chess {
         this.enPassantTarget = getEnPassantTargetSq(move, this.board);
     }
 
-    private doCastleMove(move:BoardMove):void {
+    private doCastleMove(move:Move):void {
         // king move
         this.doSimpleMove(move);
         //rook move
@@ -161,7 +168,7 @@ export class Chess {
         this.doSimpleMove(rookMove);
     }
 
-    private doSimpleMove(move:BoardMove):void {
+    private doSimpleMove(move:Move):void {
         if (move.moveType !== MoveType.MOVE) {
             return;
         }

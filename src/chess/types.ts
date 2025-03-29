@@ -57,7 +57,7 @@ export enum GameStatus {
     DRAW = "draw"
 }
 
-export type BoardMove = {
+export type Move = {
     moveType: MoveType;
 
     // ------ Have value when moveType is MOVE ------

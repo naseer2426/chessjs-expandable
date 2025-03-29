@@ -1,7 +1,7 @@
-import {Board, BoardMove, CastlingRights, EMPTY_SQUARE, MoveType, NON_EXISTENT_SQUARE} from "../types"
+import {Board, Move, CastlingRights, EMPTY_SQUARE, MoveType, NON_EXISTENT_SQUARE} from "./types"
 
 // needs to be called before move is done on the board
-export const isMoveCapture = (move:BoardMove, board:Board):boolean=>{
+export const isMoveCapture = (move:Move, board:Board):boolean=>{
     if (move.moveType === MoveType.MOVE) {
         const targetIdx = board.locationToIdx[move.targetSquare!];
         const targetSquare = board.rows[targetIdx.row][targetIdx.col];
@@ -10,14 +10,14 @@ export const isMoveCapture = (move:BoardMove, board:Board):boolean=>{
     return false;
 }
 
-export const isPawnMove = (move:BoardMove):boolean => {
+export const isPawnMove = (move:Move):boolean => {
     if (move.moveType !== MoveType.MOVE) {
         return false;
     }
     return move.piece!.slice(1) === "P";
 }
 
-export const isCastleMove = (move:BoardMove):boolean => {
+export const isCastleMove = (move:Move):boolean => {
     if (move.moveType !== MoveType.MOVE) {
         return false;
     }
@@ -33,7 +33,7 @@ export const isCastleMove = (move:BoardMove):boolean => {
     return false;
 }
 
-export const getRookMoveForCastle = (move:BoardMove):BoardMove => {
+export const getRookMoveForCastle = (move:Move):Move => {
     const isKingSide = move.targetSquare!.includes("g");
     const isWhite = move.piece!.includes("w");
     
@@ -41,11 +41,11 @@ export const getRookMoveForCastle = (move:BoardMove):BoardMove => {
         moveType: MoveType.MOVE,
         sourceSquare: getCastleRookSourceSq(isKingSide, isWhite),
         targetSquare: getCastleRookTargetSq(isKingSide, isWhite),
-        piece: move.piece
+        piece: isWhite ? "wR" : "bR"
     }
 }
 
-export const getEnPassantTargetSq = (move:BoardMove, board:Board):string|null => {
+export const getEnPassantTargetSq = (move:Move, board:Board):string|null => {
     if (move.moveType !== MoveType.MOVE) {
         return null;
     }
@@ -55,7 +55,6 @@ export const getEnPassantTargetSq = (move:BoardMove, board:Board):string|null =>
     const sourceIdx = board.locationToIdx[move.sourceSquare!];
     const targetIdx = board.locationToIdx[move.targetSquare!];
     if (Math.abs(sourceIdx.row - targetIdx.row) !== 2) {
-        console.log("not a 2 square pawn move");
         return null;
     }
     const isWhite = move.piece!.includes("w");
@@ -68,7 +67,7 @@ export const getEnPassantTargetSq = (move:BoardMove, board:Board):string|null =>
     return `${enPassantSq.file}${enPassantSq.rank}`;
 }
 
-export const castlingRightUpdates = (move:BoardMove):Partial<CastlingRights> => {
+export const castlingRightUpdates = (move:Move):Partial<CastlingRights> => {
     if (move.moveType !== MoveType.MOVE) {
         return {};
     }

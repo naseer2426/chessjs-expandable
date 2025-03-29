@@ -1,7 +1,7 @@
-import {BoardMove, MoveType} from "./types"
+import {Move, MoveType} from "./types"
 
 // assumption here is that this function is always called after validating the move
-export const boardMoveToNotation = (move:BoardMove):string=>{
+export const boardMoveToNotation = (move:Move):string=>{
     /* 
         when we save game history in the backend, unlike usual implementations,
         where we save the list of move notations, we will also save the starting
@@ -25,7 +25,7 @@ export const boardMoveToNotation = (move:BoardMove):string=>{
     return `${piece}|${sourceSquare}|${targetSquare}`
 }
 
-export const notationToBoardMove = (notation:string):BoardMove=>{
+export const notationToBoardMove = (notation:string):Move=>{
 
     if (notation.includes("[")) {
         return {
