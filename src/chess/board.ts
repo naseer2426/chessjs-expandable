@@ -3,7 +3,8 @@ import {
     Col, 
     NON_EXISTENT_SQUARE, 
     AddUnit, 
-    Board, 
+    Board,
+    EMPTY_SQUARE, 
 } from "./types"
 import { 
     getColumnNotation, 
@@ -35,7 +36,7 @@ export function fenToBoard(
     )
 }
 
-function createBoard(
+export function createBoard(
     rawRows: Row[],
     horizontalExtendLimit: number,
     verticalExtendLimit: number,
@@ -153,3 +154,15 @@ function addTBNesPaddingToRows(rows: Row[], top: number, bottom: number, vertica
     return newRows
 }
 
+export function createLocationToPiece(rows: Row[]): {[key: string]: string} {
+    const locationToPiece: {[key: string]: string} = {}
+    rows.forEach(row => {
+        row.forEach(square => {
+            if (square.piece === NON_EXISTENT_SQUARE || square.piece === EMPTY_SQUARE) {
+                return;
+            }
+            locationToPiece[`${square.file}${square.rank}`] = square.piece
+        })
+    })
+    return locationToPiece
+}

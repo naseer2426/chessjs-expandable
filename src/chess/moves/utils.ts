@@ -1,4 +1,4 @@
-import {Board, Move, CastlingRights, EMPTY_SQUARE, MoveType, NON_EXISTENT_SQUARE} from "./types"
+import {Board, Move, CastlingRights, EMPTY_SQUARE, MoveType, NON_EXISTENT_SQUARE} from "../types"
 
 // needs to be called before move is done on the board
 export const isMoveCapture = (move:Move, board:Board):boolean=>{
@@ -128,4 +128,8 @@ export const getEnPassantPawnIdx = (move:Move, board: Board):{row:number, col:nu
         row: enPassantSqIdx.row + direction,
         col: enPassantSqIdx.col
     }
+}
+export const getKingLocation = (locationToPiece: {[key: string]: string}, color: "w" | "b"):string => {
+    const piece = `${color}K`;
+    return Object.keys(locationToPiece).find(key => locationToPiece[key] === piece)!;
 }

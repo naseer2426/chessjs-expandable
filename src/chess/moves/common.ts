@@ -121,11 +121,15 @@ const simpleDiagonalMoves = (origin: string, board:Board, direction:{x:1|-1, y:1
     return moves;
 }
 
-export function pieceColor(piece:string):string {
+export function pieceColor(piece:string):"w"|"b"|"" {
     if (piece === EMPTY_SQUARE || piece === NON_EXISTENT_SQUARE) {
         return "";
     }
-    return piece.slice(0,1);
+    const color = piece.slice(0,1);
+    if (color !== "w" && color !== "b") {
+        return "";
+    }
+    return color;
 }
 
 export function getSquare(row:number, col:number, board:Board):Square|null {

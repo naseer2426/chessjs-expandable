@@ -154,6 +154,7 @@ export const knightMoves = (origin: string, board:Board):Move[] => {
     return moves;
 }
 
+// Simply all possible king moves including one's that put king in danger. Excludes castling moves
 export const kingMoves = (origin: string, board:Board):Move[] => {
     const moves:Move[] = [];
     const originIdx = board.locationToIdx[origin];

@@ -5,9 +5,9 @@ import {
     Move, 
     GameStatus,
     MoveType,
-    EMPTY_SQUARE,
+    NON_EXISTENT_SQUARE,
 } from "./types"
-import { fenToBoard } from "./board"
+import { fenToBoard, createLocationToPiece } from "./board"
 import { 
     fenToTurn, 
     fenToCastlingRights, 
@@ -22,17 +22,17 @@ import {boardMoveToNotation, notationToBoardMove} from "./notation"
 import {areAllSqNonExistent} from "./squares"
 import { 
     castlingRightUpdates, 
-    getEnPassantPawnIdx, 
     getEnPassantTargetSq, 
-    getRookMoveForCastle, 
-    isCastleMove, 
-    isEnPassantMove, 
     isMoveCapture, 
     isPawnMove
-} from "./move-utils"
+} from "./moves/utils"
+import { doLegalMove } from "./moves/do-moves"
+import { getSquare, pieceColor } from "./moves/common"
+import { allLegalPieceMovesFromSource } from "./moves"
 
 export class Chess {
     private board: Board;
+    private locationToPiece: {[key: string]: string};
     private turn: "w" | "b";
     private castlingRights: CastlingRights;
     private enPassantTarget: string | null; // e.g. "e3"
@@ -55,6 +55,7 @@ export class Chess {
             horizontalAddUnit, 
             verticalAddUnit,
         )
+        this.locationToPiece = createLocationToPiece(this.board.rows)
         this.turn = fenToTurn(fen)
         this.castlingRights = fenToCastlingRights(fen)
         this.enPassantTarget = fenToEnPassantTarget(fen)
@@ -75,7 +76,33 @@ export class Chess {
     }
 
     private isLegalMove(move:Move):boolean {
-        return true;
+        if (move.moveType === MoveType.EXTEND) {
+            const expandSqIdx = this.board.locationToIdx[move.expandLocation!];
+            if (expandSqIdx === null) {
+                return false;
+            }
+            const expandSq = getSquare(expandSqIdx.row, expandSqIdx.col, this.board);
+            if (expandSq === null) {
+                return false;
+            }
+            if (expandSq.piece !== NON_EXISTENT_SQUARE) {
+                return false;
+            }
+            return true;
+        }
+        const color = pieceColor(move.piece!);
+        if (color !== this.turn) {
+            return false;
+        }
+        const legalPieceMoves = allLegalPieceMovesFromSource(
+            move.sourceSquare!,
+            this.board,
+            this.locationToPiece,
+            this.enPassantTarget,
+            this.castlingRights
+        )
+        const matchingMove = legalPieceMoves.find((m)=>m==move);
+        return !!matchingMove;
     }
 
     public moveFromNotation(notation:string):boolean {
@@ -116,23 +143,14 @@ export class Chess {
     }
 
     private doLegalMove(move:Move):void {
-        if (move.moveType === MoveType.EXTEND) {
-            this.board.locationToUnitSqIdxs[move.expandLocation!].forEach(sqIdx => {
-                this.board.rows[sqIdx.row][sqIdx.col].piece = EMPTY_SQUARE;
-            })
-            return;
-        }
-        if (isCastleMove(move)) {
-            this.doCastleMove(move);
-            return;
-        }
-        
-        if (isEnPassantMove(move, this.enPassantTarget)) {
-            this.doEnPassantMove(move);
-            return;
-        }
-        
-        this.doSimpleMove(move);
+        const {newBoard, newLocationToPiece} = doLegalMove(
+            move, 
+            this.board, 
+            this.locationToPiece, 
+            this.enPassantTarget
+        );
+        this.board = newBoard;
+        this.locationToPiece = newLocationToPiece;
     }
 
     private recordMoveMetrics(move:Move, isCapture:boolean):void {
@@ -162,31 +180,6 @@ export class Chess {
 
         // en passant target
         this.enPassantTarget = getEnPassantTargetSq(move, this.board);
-    }
-
-    private doCastleMove(move:Move):void {
-        // king move
-        this.doSimpleMove(move);
-        //rook move
-        const rookMove = getRookMoveForCastle(move);
-        this.doSimpleMove(rookMove);
-    }
-
-    private doSimpleMove(move:Move):void {
-        if (move.moveType !== MoveType.MOVE) {
-            return;
-        }
-        const sourceIdx = this.board.locationToIdx[move.sourceSquare!];
-        const targetIdx = this.board.locationToIdx[move.targetSquare!];
-        this.board.rows[sourceIdx.row][sourceIdx.col].piece = EMPTY_SQUARE;
-        this.board.rows[targetIdx.row][targetIdx.col].piece = move.piece!;
-    }
-
-    // this function assumes you are passing a valid en passant move
-    private doEnPassantMove(move:Move):void {
-        this.doSimpleMove(move);
-        const pawnIdx = getEnPassantPawnIdx(move, this.board);
-        this.board.rows[pawnIdx.row][pawnIdx.col].piece = EMPTY_SQUARE;
     }
 
     // used for testing
