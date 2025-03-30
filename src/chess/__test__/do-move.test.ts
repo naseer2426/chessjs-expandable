@@ -1,10 +1,8 @@
-import {Chess} from "../index"
+import {Chess} from ".."
 import { MoveType } from "../types";
 
 describe("do move",()=>{
-    /*
-        TODO: add test cases for castling right updates
-    */
+    
     test("simple moves",()=>{
         const chess = new Chess(
             "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
@@ -159,5 +157,55 @@ describe("do move",()=>{
         chess.moveFromNotation("bK|e8|c8");
         expect(chess.getCurrentFen()).toBe("#E$2kr1bnrE/E$pppbqpppE/E$2np4E/E$4p3E/E$3PP3E/E$2N1B3E/E$PPP1QPPPE/E$R3KBNRE w KQ - 1 6");
         expect(chess.getMoveHistory()).toEqual(["bK|e8|c8"]);
+    })
+
+    test("en passant white pawn",()=>{
+        const chess = new Chess(
+            "rnbqkbnr/ppppp1pp/8/8/4Pp2/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 3",
+            4,
+            4,
+            {
+                x: 1,
+                y: 1
+            },
+            {
+                x: 1,
+                y: 1
+            }
+        );
+        const move = {
+            moveType: MoveType.MOVE,
+            piece: "bP",
+            sourceSquare: "f4",
+            targetSquare: "e3"
+        }
+        chess.moveFromBoard(move);
+        expect(chess.getCurrentFen()).toBe("#E$rnbqkbnrE/E$ppppp1ppE/E$8E/E$8E/E$8E/E$4p3E/E$PPPP1PPPE/E$RNBQKBNRE w KQkq - 0 4");
+        expect(chess.getMoveHistory()).toEqual(["bP|f4|e3"]);
+    })
+
+    test("en passant black pawn",()=>{
+        const chess = new Chess(
+            "rnbqkbnr/pppp1pp1/7p/3Pp3/8/8/PPP1PPPP/RNBQKBNR w KQkq e6 0 1",
+            4,
+            4,
+            {
+                x: 1,
+                y: 1
+            },
+            {
+                x: 1,
+                y: 1
+            }
+        );
+        const move = {
+            moveType: MoveType.MOVE,
+            piece: "wP",
+            sourceSquare: "d5",
+            targetSquare: "e6"
+        }
+        chess.moveFromBoard(move);
+        expect(chess.getCurrentFen()).toBe("#E$rnbqkbnrE/E$pppp1pp1E/E$4P2pE/E$8E/E$8E/E$8E/E$PPP1PPPPE/E$RNBQKBNRE b KQkq - 0 1");
+        expect(chess.getMoveHistory()).toEqual(["wP|d5|e6"]);
     })
 })

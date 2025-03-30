@@ -22,12 +22,14 @@ import {boardMoveToNotation, notationToBoardMove} from "./notation"
 import {areAllSqNonExistent} from "./squares"
 import { 
     castlingRightUpdates, 
+    getEnPassantPawnIdx, 
     getEnPassantTargetSq, 
     getRookMoveForCastle, 
     isCastleMove, 
+    isEnPassantMove, 
     isMoveCapture, 
     isPawnMove
-} from "./metrics"
+} from "./move-utils"
 
 export class Chess {
     private board: Board;
@@ -65,8 +67,9 @@ export class Chess {
         if (!this.isLegalMove(move)) {
             return false;
         }
-        this.recordMoveMetrics(move);
+        const isCapture = isMoveCapture(move, this.board);
         this.doLegalMove(move);
+        this.recordMoveMetrics(move, isCapture);
         this.setGameStatus();
         return true;
     }
@@ -124,14 +127,15 @@ export class Chess {
             return;
         }
         
+        if (isEnPassantMove(move, this.enPassantTarget)) {
+            this.doEnPassantMove(move);
+            return;
+        }
+        
         this.doSimpleMove(move);
     }
 
-    /*
-        needs to be called before move is done because it depends
-        on the state of the board before move happens
-    */
-    private recordMoveMetrics(move:Move):void {
+    private recordMoveMetrics(move:Move, isCapture:boolean):void {
         // history
         this.moveHistory.push(boardMoveToNotation(move));
 
@@ -150,7 +154,7 @@ export class Chess {
         this.turn = this.turn === "w" ? "b" : "w";
 
         // halfmove clock
-        if (isPawnMove(move) || isMoveCapture(move,this.board)) {
+        if (isPawnMove(move) || isCapture) {
             this.halfmoveClock = 0;
         } else {
             this.halfmoveClock++;
@@ -176,6 +180,18 @@ export class Chess {
         const targetIdx = this.board.locationToIdx[move.targetSquare!];
         this.board.rows[sourceIdx.row][sourceIdx.col].piece = EMPTY_SQUARE;
         this.board.rows[targetIdx.row][targetIdx.col].piece = move.piece!;
+    }
+
+    // this function assumes you are passing a valid en passant move
+    private doEnPassantMove(move:Move):void {
+        this.doSimpleMove(move);
+        const pawnIdx = getEnPassantPawnIdx(move, this.board);
+        this.board.rows[pawnIdx.row][pawnIdx.col].piece = EMPTY_SQUARE;
+    }
+
+    // used for testing
+    public getBoard():Board {
+        return this.board;
     }
     
 }

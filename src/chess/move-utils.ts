@@ -104,3 +104,28 @@ const getCastleRookTargetSq = (isKingSide:boolean, isWhite:boolean):string => {
     }
     return isWhite ? "d1" : "d8";
 }
+
+export const isEnPassantMove = (move:Move, enPassantSq:string|null):boolean => {
+    if (move.moveType !== MoveType.MOVE) {
+        return false;
+    }
+    if (!isPawnMove(move)) {
+        return false;
+    }
+    if (enPassantSq === null) {
+        return false;
+    }
+    return move.targetSquare! === enPassantSq;
+}
+
+// this function assumes you are passing in a valid en passant square
+export const getEnPassantPawnIdx = (move:Move, board: Board):{row:number, col:number} => {
+    const enPassantSq = move.targetSquare!;
+    const enPassantSqIdx = board.locationToIdx[enPassantSq];
+    const isAttackerWhite = move.piece!.includes("w");
+    const direction = isAttackerWhite ? 1 : -1;
+    return {
+        row: enPassantSqIdx.row + direction,
+        col: enPassantSqIdx.col
+    }
+}

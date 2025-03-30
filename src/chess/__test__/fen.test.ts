@@ -1,4 +1,4 @@
-import {Chess} from "../index"
+import {Chess} from ".."
 
 describe("Fen",()=>{
     test("initialized default fen should match current fen", ()=>{
