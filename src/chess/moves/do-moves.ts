@@ -39,7 +39,7 @@ function doExtendMove(move:Move, board:Board, locationToPiece: {[key: string]: s
             newLocationToPiece: locationToPiece
         };
     }
-    let newBoard = {...board};
+    let newBoard = JSON.parse(JSON.stringify(board)) as Board;
     newBoard.locationToUnitSqIdxs[move.expandLocation!].forEach(sqIdx => {
         newBoard.rows[sqIdx.row][sqIdx.col].piece = EMPTY_SQUARE;
     })
@@ -56,7 +56,7 @@ function doExtendMove(move:Move, board:Board, locationToPiece: {[key: string]: s
     };
 }
 
-function doSimpleMove(move:Move, board:Board, locationToPiece: {[key: string]: string}):{
+export function doSimpleMove(move:Move, board:Board, locationToPiece: {[key: string]: string}):{
     newBoard:Board,
     newLocationToPiece: {[key: string]: string}
 } {
@@ -66,8 +66,10 @@ function doSimpleMove(move:Move, board:Board, locationToPiece: {[key: string]: s
             newLocationToPiece: locationToPiece
         };
     }
-    const newBoard = {...board};
+    // Create a deep copy of the board
+    const newBoard = JSON.parse(JSON.stringify(board)) as Board;
     const newLocationToPiece = {...locationToPiece};
+    
     const sourceIdx = newBoard.locationToIdx[move.sourceSquare!];
     const targetIdx = newBoard.locationToIdx[move.targetSquare!];
     

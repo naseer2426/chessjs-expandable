@@ -1,5 +1,6 @@
 import {Chess} from ".."
-import { MoveType } from "../types";
+import { EMPTY_SQUARE, MoveType } from "../types";
+import { doSimpleMove } from "../moves/do-moves";
 
 describe("do move",()=>{
     
@@ -25,7 +26,7 @@ describe("do move",()=>{
             sourceSquare: "e2",
             targetSquare: "e4"
         }
-        chess.moveFromBoard(move);
+        expect(chess.moveFromBoard(move)).toBe(true);
         expect(chess.getCurrentFen()).toBe("#E$rnbqkbnrE/E$ppppppppE/E$8E/E$8E/E$4P3E/E$8E/E$PPPP1PPPE/E$RNBQKBNRE b KQkq e3 0 1");
         expect(chess.getMoveHistory()).toEqual(["wP|e2|e4"]);
 
@@ -207,5 +208,40 @@ describe("do move",()=>{
         chess.moveFromBoard(move);
         expect(chess.getCurrentFen()).toBe("#E$rnbqkbnrE/E$pppp1pp1E/E$4P2pE/E$8E/E$8E/E$8E/E$PPP1PPPPE/E$RNBQKBNRE b KQkq - 0 1");
         expect(chess.getMoveHistory()).toEqual(["wP|d5|e6"]);
+    })
+})
+
+describe("do simple move",()=>{
+    test("passed object unchanged",()=>{
+        const chess = new Chess(
+            "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+            4,
+            4,
+            {x: 1, y: 1},
+            {x: 1, y: 1}
+        );
+        const board = chess.getBoard();
+        const locationToPiece = chess.getLocationToPiece();
+        const move = {
+            moveType: MoveType.MOVE,
+            piece: "wP",
+            sourceSquare: "e2",
+            targetSquare: "e4"
+        }
+        const {newBoard, newLocationToPiece} = doSimpleMove(move, board, locationToPiece);
+        expect(newLocationToPiece["e2"]).toBe(undefined);
+        expect(newLocationToPiece["e4"]).toBe("wP");
+
+        expect(locationToPiece["e2"]).toBe("wP");
+        expect(locationToPiece["e4"]).toBe(undefined);
+
+        const e2Idx = board.locationToIdx["e2"];
+        const e4Idx = board.locationToIdx["e4"];
+
+        expect(newBoard.rows[e2Idx.row][e2Idx.col].piece).toBe(EMPTY_SQUARE);
+        expect(newBoard.rows[e4Idx.row][e4Idx.col].piece).toBe("wP");
+
+        expect(board.rows[e2Idx.row][e2Idx.col].piece).toBe("wP");
+        expect(board.rows[e4Idx.row][e4Idx.col].piece).toBe(EMPTY_SQUARE);
     })
 })

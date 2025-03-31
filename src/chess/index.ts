@@ -28,7 +28,7 @@ import {
 } from "./moves/utils"
 import { doLegalMove } from "./moves/do-moves"
 import { getSquare, pieceColor } from "./moves/common"
-import { allLegalPieceMovesFromSource } from "./moves"
+import { allLegalPieceMovesFromSource, isKingExposedAfterMove } from "./moves"
 
 export class Chess {
     private board: Board;
@@ -75,6 +75,45 @@ export class Chess {
         return true;
     }
 
+    public legalMoves():Move[] {
+        const moves:Move[] = [];
+        for (const [location, piece] of Object.entries(this.locationToPiece)) {
+            if (pieceColor(piece) !== this.turn) {
+                continue;
+            }
+            moves.push(...allLegalPieceMovesFromSource(
+                location, 
+                this.board, 
+                this.locationToPiece, 
+                this.enPassantTarget, 
+                this.castlingRights,
+            ));
+        }
+        this.board.rows.forEach((row)=>{
+            row.forEach((sq)=>{
+                if (sq.piece !== NON_EXISTENT_SQUARE) {
+                    return;
+                }
+                const extendMove:Move = {
+                    expandLocation: `${sq.file}${sq.rank}`,
+                    moveType: MoveType.EXTEND
+                }
+                if (isKingExposedAfterMove(
+                    extendMove, 
+                    this.board, 
+                    this.locationToPiece, 
+                    this.enPassantTarget, 
+                    this.castlingRights, 
+                    this.turn,
+                )) {
+                    return;
+                }
+                moves.push(extendMove);
+            })
+        })
+        return moves;
+    }
+
     private isLegalMove(move:Move):boolean {
         if (move.moveType === MoveType.EXTEND) {
             const expandSqIdx = this.board.locationToIdx[move.expandLocation!];
@@ -88,7 +127,14 @@ export class Chess {
             if (expandSq.piece !== NON_EXISTENT_SQUARE) {
                 return false;
             }
-            return true;
+            return !isKingExposedAfterMove(
+                move, 
+                this.board, 
+                this.locationToPiece, 
+                this.enPassantTarget, 
+                this.castlingRights, 
+                this.turn,
+            );
         }
         const color = pieceColor(move.piece!);
         if (color !== this.turn) {
@@ -101,7 +147,11 @@ export class Chess {
             this.enPassantTarget,
             this.castlingRights
         )
-        const matchingMove = legalPieceMoves.find((m)=>m==move);
+        const matchingMove = legalPieceMoves.find((m)=>m.moveType === move.moveType &&
+            m.sourceSquare === move.sourceSquare &&
+            m.targetSquare === move.targetSquare &&
+            m.piece === move.piece
+        );
         return !!matchingMove;
     }
 
@@ -186,5 +236,8 @@ export class Chess {
     public getBoard():Board {
         return this.board;
     }
-    
+    //used for testing
+    public getLocationToPiece():{[key: string]: string} {
+        return this.locationToPiece;
+    }
 }

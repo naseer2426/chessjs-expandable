@@ -22,9 +22,13 @@ export function allLegalPieceMovesFromSource(
     if (!piece) {
         return [];
     }
+    const color = pieceColor(piece);
+    if (color === "") { // source square is empty or non existent
+        return [];
+    }
     const allMoves = getAllPieceMovesFromSource(board, locationToPiece, source, enPassantSq, castlingRights);
     const legalMoves = allMoves.filter((move)=>{
-        if (isKingExposedAfterMove(move, board, locationToPiece, enPassantSq, castlingRights)) {
+        if (isKingExposedAfterMove(move, board, locationToPiece, enPassantSq, castlingRights, color)) {
             return false;
         }
         return true;
@@ -32,31 +36,26 @@ export function allLegalPieceMovesFromSource(
     return legalMoves
 }
 
-function isKingExposedAfterMove(
+export function isKingExposedAfterMove(
     move:Move,
     board:Board,
     locationToPiece: {[key: string]: string},
     enPassantTarget: string|null,
     castlingRights:CastlingRights,
+    moverColor: "w" | "b",
 ): boolean {
-    if (move.moveType === MoveType.EXTEND) {
-        return false;
-    }
+    
     const {newBoard, newLocationToPiece} = doLegalMove(move, board, locationToPiece, enPassantTarget);
-    const moverColor = pieceColor(move.piece!);
-    if (moverColor === "") { // should never happen
-        return false;
-    }
     const opponentColor = moverColor === "w" ? "b" : "w";
     const opponentMoves = getAllMoves(newBoard, newLocationToPiece, opponentColor, null, castlingRights);
     const kingLocation = getKingLocation(newLocationToPiece, moverColor);
-    const exposedMove = opponentMoves.find((move)=>{
+    const exposingMove = opponentMoves.find((move)=>{
         if (move.moveType !== MoveType.MOVE) {
             return false;
         }
         return move.targetSquare === kingLocation;
     })
-    return !!exposedMove;
+    return !!exposingMove;
 }
 
 export function isCastleLegal(
@@ -76,10 +75,25 @@ export function isCastleLegal(
         board, 
         locationToPiece, 
         opponentColor, 
-        null, // there may be en passant possible but it can never block king side castle so passing null
-        castlingRights,
+        /* 
+            there may be en passant possible but it can never block king side castle so passing null
+            so passing null to prevent passing en passant target in the whole callchain
+        */
+        null, 
+        /*
+            opponent may have castling rights, but checking if opponent can castle here will trigger infinite recursion.
+            oppenents castling can never block our castling, so we can safely pass false for castling rights
+        */
+        {K:false, Q:false, k:false, q:false},
     );
     let isLegal = true;
+    // check if there are other pieces in caste squares
+    sqauresToCheck.forEach((square)=>{
+        if (locationToPiece[square]) {
+            isLegal = false;
+        }
+    })
+    // check if opponent pieces attack caste squares
     opponentMoves.forEach((move) => {
         if (move.moveType !== MoveType.MOVE) {
             return
