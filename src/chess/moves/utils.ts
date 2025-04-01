@@ -133,3 +133,27 @@ export const getKingLocation = (locationToPiece: {[key: string]: string}, color:
     const piece = `${color}K`;
     return Object.keys(locationToPiece).find(key => locationToPiece[key] === piece)!;
 }
+
+export const isTheoreticalDraw = (locationToPiece: {[key: string]: string}):boolean => {
+    const numPieces = Object.keys(locationToPiece).length;
+    if (numPieces < 3) {
+        return true; // two kings
+    }
+    if (numPieces > 3) {
+        /*
+            not accouting for 1 king + 2 knights vs 1 king draw because I am lazy
+            also not accounting for 1 king + 1 bishop vs 1 king + 1 bishop of the same color draw
+        */
+        return false
+    }
+    // 3 pieces
+    const bishops = Object.keys(locationToPiece).filter((key)=>locationToPiece[key].includes("B"));
+    if (bishops.length === 1) {
+        return true;
+    }
+    const knights = Object.keys(locationToPiece).filter((key)=>locationToPiece[key].includes("N"));
+    if (knights.length === 1) {
+        return true;
+    }
+    return false;
+}

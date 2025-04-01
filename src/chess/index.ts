@@ -24,11 +24,12 @@ import {
     castlingRightUpdates, 
     getEnPassantTargetSq, 
     isMoveCapture, 
-    isPawnMove
+    isPawnMove,
+    isTheoreticalDraw
 } from "./moves/utils"
 import { doLegalMove } from "./moves/do-moves"
 import { getSquare, pieceColor } from "./moves/common"
-import { allLegalPieceMovesFromSource, isKingExposedAfterMove } from "./moves"
+import { allLegalPieceMovesFromSource, isKingExposedAfterMove, isKingInCheck } from "./moves"
 
 export class Chess {
     private board: Board;
@@ -71,7 +72,6 @@ export class Chess {
         const isCapture = isMoveCapture(move, this.board);
         this.doLegalMove(move);
         this.recordMoveMetrics(move, isCapture);
-        this.setGameStatus();
         return true;
     }
 
@@ -161,13 +161,24 @@ export class Chess {
     }
 
     public getGameStatus():GameStatus {
-        //TODO: implement
+        if (isTheoreticalDraw(this.locationToPiece)) {
+            return GameStatus.DRAW;
+        }
+        const moves = this.legalMoves();
+        const kingInCheck = isKingInCheck(
+            this.board,
+            this.locationToPiece,
+            this.enPassantTarget,
+            this.castlingRights,
+            this.turn
+        )
+        if (moves.length === 0 && kingInCheck) { // checkmate
+            return this.turn === "w" ? GameStatus.BLACK_WON : GameStatus.WHITE_WON;
+        }
+        if (moves.length === 0) { // stalemate
+            return GameStatus.DRAW;
+        }
         return GameStatus.IN_PROGRESS;
-    }
-
-    private setGameStatus():void {
-        //TODO: implement
-        return;
     }
 
     public getMoveHistory():string[] {

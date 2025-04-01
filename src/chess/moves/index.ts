@@ -46,9 +46,25 @@ export function isKingExposedAfterMove(
 ): boolean {
     
     const {newBoard, newLocationToPiece} = doLegalMove(move, board, locationToPiece, enPassantTarget);
-    const opponentColor = moverColor === "w" ? "b" : "w";
-    const opponentMoves = getAllMoves(newBoard, newLocationToPiece, opponentColor, null, castlingRights);
-    const kingLocation = getKingLocation(newLocationToPiece, moverColor);
+    return isKingInCheck(
+        newBoard, 
+        newLocationToPiece, 
+        enPassantTarget, 
+        castlingRights, 
+        moverColor,
+    );
+}
+
+export function isKingInCheck(
+    board:Board,
+    locationToPiece: {[key: string]: string},
+    enPassantTarget: string|null,
+    castlingRights:CastlingRights,
+    color: "w" | "b",
+):boolean {
+    const opponentColor = color === "w" ? "b" : "w";
+    const opponentMoves = getAllMoves(board, locationToPiece, opponentColor, enPassantTarget, castlingRights);
+    const kingLocation = getKingLocation(locationToPiece, color);
     const exposingMove = opponentMoves.find((move)=>{
         if (move.moveType !== MoveType.MOVE) {
             return false;

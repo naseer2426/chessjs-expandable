@@ -66,8 +66,6 @@ export type Move = {
     /*
         white pieces will have w prefix, black pieces will have b prefix. 
         the piece symbol will always be uppercase.
-        the reason this is different from the piece stored in board.rows is because
-        this value will come from fork of the existing react-chessboard package.
     */
     piece?: string; 
 
