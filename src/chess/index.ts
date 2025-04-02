@@ -1,3 +1,4 @@
+export * from "./types"
 import { 
     Board, 
     AddUnit, 
@@ -267,3 +268,4 @@ export class Chess {
         return boardFen.slice(0, -1); // to remove the last "/"
     }
 }
+
