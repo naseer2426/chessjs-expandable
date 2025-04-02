@@ -28,7 +28,7 @@ export function allLegalPieceMovesFromSource(
     }
     const allMoves = getAllPieceMovesFromSource(board, locationToPiece, source, enPassantSq, castlingRights);
     const legalMoves = allMoves.filter((move)=>{
-        if (isKingExposedAfterMove(move, board, locationToPiece, enPassantSq, castlingRights, color)) {
+        if (isKingExposedAfterMove(move, board, locationToPiece, enPassantSq, color)) {
             return false;
         }
         return true;
@@ -41,7 +41,6 @@ export function isKingExposedAfterMove(
     board:Board,
     locationToPiece: {[key: string]: string},
     enPassantTarget: string|null,
-    castlingRights:CastlingRights,
     moverColor: "w" | "b",
 ): boolean {
     
@@ -50,7 +49,6 @@ export function isKingExposedAfterMove(
         newBoard, 
         newLocationToPiece, 
         enPassantTarget, 
-        castlingRights, 
         moverColor,
     );
 }
@@ -59,11 +57,20 @@ export function isKingInCheck(
     board:Board,
     locationToPiece: {[key: string]: string},
     enPassantTarget: string|null,
-    castlingRights:CastlingRights,
     color: "w" | "b",
 ):boolean {
     const opponentColor = color === "w" ? "b" : "w";
-    const opponentMoves = getAllMoves(board, locationToPiece, opponentColor, enPassantTarget, castlingRights);
+    const opponentMoves = getAllMoves(
+        board, 
+        locationToPiece, 
+        opponentColor, 
+        enPassantTarget, 
+        /*
+            opponent may have castling rights, but a castle cannot be the move that takes your king, so setting all to false
+            to avoid calling getAllMoves again for isCastleLegal
+        */
+        {K:false, Q:false, k:false, q:false},
+    );
     const kingLocation = getKingLocation(locationToPiece, color);
     const exposingMove = opponentMoves.find((move)=>{
         if (move.moveType !== MoveType.MOVE) {

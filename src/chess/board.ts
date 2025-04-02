@@ -88,19 +88,89 @@ function addNesPaddingToRows(rows: Row[], toAdd: {
     left: number,
     right: number
 }, horizontalExtendLimit: number, verticalExtendLimit: number): Row[] {
-    const lrPaddedRows = rows.map(row => addLRNesPaddingToRow(row, toAdd.left, toAdd.right, horizontalExtendLimit))
-    const paddedRows = addTBNesPaddingToRows(lrPaddedRows, toAdd.top, toAdd.bottom, verticalExtendLimit)
+
+    const existingPadding = getExistingPadding(rows)
+    const left = getPaddingToAdd(existingPadding.left, toAdd.left, horizontalExtendLimit)
+    const right = getPaddingToAdd(existingPadding.right, toAdd.right, horizontalExtendLimit)
+    const top = getPaddingToAdd(existingPadding.top, toAdd.top, verticalExtendLimit)
+    const bottom = getPaddingToAdd(existingPadding.bottom, toAdd.bottom, verticalExtendLimit)
+
+    const lrPaddedRows = rows.map(row => addLRNesPaddingToRow(row, left, right))
+    const paddedRows = addTBNesPaddingToRows(lrPaddedRows, top, bottom)
+    
     return paddedRows
 }
 
-function addLRNesPaddingToRow(row: Row, left: number, right: number, horizontalExtendLimit: number): Row {
+function getExistingPadding(rows: Row[]): {
+    top: number,
+    bottom: number,
+    left: number,
+    right: number
+} {
+    const eighthRankIdx = rows.findIndex(row => row[0].rank === "8")
+    if (eighthRankIdx === -1) {
+        // should never happen since we always start off with normal board
+        return {
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0
+        }
+    }
+    const aFileIdx = rows[0].findIndex(square => square.file === "a")
+    if (aFileIdx === -1) {
+        // should never happen since we always start off with normal board
+        return {
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0
+        }
+    }
+    return {
+        top: eighthRankIdx,
+        bottom: rows.length - (8+eighthRankIdx),
+        left: aFileIdx,
+        right: rows[0].length - (8+aFileIdx)
+    }
+}
+
+function getPaddingToAdd(existing:number, toAdd: number, limit:number): number {
+    const total = existing + toAdd
+    if (total > limit) {
+        return limit - existing
+    }
+    return toAdd
+}
+
+function addTBNesPaddingToRows(rows: Row[], top: number, bottom: number): Row[] {
+    const newRows: Row[] = []
+    const rowLength = rows[0].length
+    const startingFenColIdx = getFenColIdx(rows[0][0].file)
+    const topRank = rows[0][0].rank
+    const bottomRank = rows[rows.length - 1][0].rank
+
+    for (let i = 0; i < top; i++) {
+        const rank = (parseInt(topRank, 10) + top - i).toString()
+        newRows.push(nonExistentRow(rowLength, startingFenColIdx, rank))
+    }
+
+    rows.forEach(row => {
+        newRows.push(row)
+    })
+
+    for (let i = 0; i < bottom; i++) {
+        const rank = (parseInt(bottomRank, 10) - i - 1).toString()
+        newRows.push(nonExistentRow(rowLength, startingFenColIdx, rank))
+    }
+    return newRows
+}
+
+function addLRNesPaddingToRow(row: Row, left: number, right: number): Row {
     const newRow: Row = []
     for (let i = 0; i < left; i++) {
         const offset = left - i
         const fenColIdx = getFenColIdx(row[0].file) - offset
-        if (i + 1 > horizontalExtendLimit) {
-            break;
-        }
         newRow.push({
             piece: NON_EXISTENT_SQUARE,
             rank: row[0].rank,
@@ -113,9 +183,6 @@ function addLRNesPaddingToRow(row: Row, left: number, right: number, horizontalE
     for (let i = 0; i < right; i++) {
         const offset = i + 1
         const fenColIdx = getFenColIdx(row[row.length - 1].file) + offset
-        if (i + 1 > horizontalExtendLimit) {
-            break;
-        }
         newRow.push({
             piece: NON_EXISTENT_SQUARE,
             rank: row[0].rank,
@@ -123,35 +190,6 @@ function addLRNesPaddingToRow(row: Row, left: number, right: number, horizontalE
         })
     }
     return newRow
-}
-
-function addTBNesPaddingToRows(rows: Row[], top: number, bottom: number, verticalExtendLimit: number): Row[] {
-    const newRows: Row[] = []
-    const rowLength = rows[0].length
-    const startingFenColIdx = getFenColIdx(rows[0][0].file)
-    const topRank = rows[0][0].rank
-    const bottomRank = rows[rows.length - 1][0].rank
-
-    for (let i = 0; i < top; i++) {
-        const rank = (parseInt(topRank, 10) + top - i).toString()
-        if (i + 1 > verticalExtendLimit) {
-            break;
-        }
-        newRows.push(nonExistentRow(rowLength, startingFenColIdx, rank))
-    }
-
-    rows.forEach(row => {
-        newRows.push(row)
-    })
-
-    for (let i = 0; i < bottom; i++) {
-        const rank = (parseInt(bottomRank, 10) - i - 1).toString()
-        if (i + 1 > verticalExtendLimit) {
-            break;
-        }
-        newRows.push(nonExistentRow(rowLength, startingFenColIdx, rank))
-    }
-    return newRows
 }
 
 export function createLocationToPiece(rows: Row[]): {[key: string]: string} {

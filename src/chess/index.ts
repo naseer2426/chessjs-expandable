@@ -103,7 +103,6 @@ export class Chess {
                     this.board, 
                     this.locationToPiece, 
                     this.enPassantTarget, 
-                    this.castlingRights, 
                     this.turn,
                 )) {
                     return;
@@ -131,8 +130,7 @@ export class Chess {
                 move, 
                 this.board, 
                 this.locationToPiece, 
-                this.enPassantTarget, 
-                this.castlingRights, 
+                this.enPassantTarget,  
                 this.turn,
             );
         }
@@ -169,7 +167,6 @@ export class Chess {
             this.board,
             this.locationToPiece,
             this.enPassantTarget,
-            this.castlingRights,
             this.turn
         )
         if (moves.length === 0 && kingInCheck) { // checkmate
@@ -250,5 +247,13 @@ export class Chess {
     //used for testing
     public getLocationToPiece():{[key: string]: string} {
         return this.locationToPiece;
+    }
+
+    public getDebugFen():string {
+        let boardFen = "";
+        this.board.rows.forEach(row => {
+            boardFen += getRowFen(row) + "/";
+        })
+        return boardFen.slice(0, -1); // to remove the last "/"
     }
 }

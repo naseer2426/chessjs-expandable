@@ -25,9 +25,9 @@ const verticalMoves = (origin: string, board:Board, direction:1|-1):Move[] => {
     if (piece === EMPTY_SQUARE || piece === NON_EXISTENT_SQUARE) {
         return [];
     }
-    const distToEdge = direction === 1 ? board.rows.length - originIdx.row : originIdx.row;
+    const distToEdge = direction === 1 ? board.rows.length - originIdx.row : originIdx.row+1;
     const moves:Move[] = [];
-    for (let i = 1; i <= distToEdge; i++) {
+    for (let i = 1; i < distToEdge; i++) {
         const newSqIdx = {
             row: originIdx.row + i * direction,
             col: originIdx.col
@@ -56,9 +56,9 @@ const horizontalMoves = (origin: string, board:Board, direction:1|-1):Move[] => 
     if (piece === EMPTY_SQUARE || piece === NON_EXISTENT_SQUARE) {
         return [];
     }
-    const distToEdge = direction === 1 ? board.rows[0].length - originIdx.col : originIdx.col;
+    const distToEdge = direction === 1 ? board.rows[0].length - originIdx.col : originIdx.col+1;
     const moves:Move[] = [];
-    for (let i = 1; i <= distToEdge; i++) {
+    for (let i = 1; i < distToEdge; i++) {
         const newSqIdx = {
             row: originIdx.row,
             col: originIdx.col + i * direction
@@ -91,15 +91,15 @@ const simpleDiagonalMoves = (origin: string, board:Board, direction:{x:1|-1, y:1
 
     let distToVerticalEdge = board.rows.length - originIdx.row;
     if (direction.y === -1) {
-        distToVerticalEdge = originIdx.row;
+        distToVerticalEdge = originIdx.row+1;
     }
     let distToHorizontalEdge = board.rows[0].length - originIdx.col;
     if (direction.x === -1) {
-        distToHorizontalEdge = originIdx.col;
+        distToHorizontalEdge = originIdx.col+1;
     }
     const smallerDist = Math.min(distToVerticalEdge, distToHorizontalEdge);
     const moves:Move[] = [];
-    for (let i = 1; i <= smallerDist; i++) {
+    for (let i = 1; i < smallerDist; i++) {
         const newSqIdx = {
             row: originIdx.row + i * direction.y,
             col: originIdx.col + i * direction.x
