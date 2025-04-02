@@ -27,7 +27,7 @@ describe("do move",()=>{
             targetSquare: "e4"
         }
         expect(chess.moveFromBoard(move)).toBe(true);
-        expect(chess.getCurrentFen()).toBe("#E$rnbqkbnrE/E$ppppppppE/E$8E/E$8E/E$4P3E/E$8E/E$PPPP1PPPE/E$RNBQKBNRE b KQkq e3 0 1");
+        expect(chess.getCurrentFen()).toBe("E$EEEEEEEEE/#E$rnbqkbnrE/E$ppppppppE/E$8E/E$8E/E$4P3E/E$8E/E$PPPP1PPPE/E$RNBQKBNRE/E$EEEEEEEEE b KQkq e3 0 1");
         expect(chess.getMoveHistory()).toEqual(["wP|e2|e4"]);
 
         //e5
@@ -38,7 +38,7 @@ describe("do move",()=>{
             targetSquare: "e5"
         }
         chess.moveFromBoard(move2);
-        expect(chess.getCurrentFen()).toBe("#E$rnbqkbnrE/E$pppp1pppE/E$8E/E$4p3E/E$4P3E/E$8E/E$PPPP1PPPE/E$RNBQKBNRE w KQkq e6 0 2");
+        expect(chess.getCurrentFen()).toBe("E$EEEEEEEEE/#E$rnbqkbnrE/E$pppp1pppE/E$8E/E$4p3E/E$4P3E/E$8E/E$PPPP1PPPE/E$RNBQKBNRE/E$EEEEEEEEE w KQkq e6 0 2");
         expect(chess.getMoveHistory()).toEqual(["wP|e2|e4", "bP|e7|e5"]);
     })
     test("white king side castle",()=>{
@@ -62,7 +62,7 @@ describe("do move",()=>{
             targetSquare: "g1"
         }
         chess.moveFromBoard(move);
-        expect(chess.getCurrentFen()).toBe("#E$r1bqk1nrE/E$ppppbpppE/E$2n5E/E$1B2p3E/E$4P3E/E$5N2E/E$PPPP1PPPE/E$RNBQ1RK1E b kq - 1 6");
+        expect(chess.getCurrentFen()).toBe("E$EEEEEEEEE/#E$r1bqk1nrE/E$ppppbpppE/E$2n5E/E$1B2p3E/E$4P3E/E$5N2E/E$PPPP1PPPE/E$RNBQ1RK1E/E$EEEEEEEEE b kq - 1 6");
         expect(chess.getMoveHistory()).toEqual(["wK|e1|g1"]);
     })
 
@@ -87,7 +87,7 @@ describe("do move",()=>{
             targetSquare: "g8"
         }
         chess.moveFromBoard(move);
-        expect(chess.getCurrentFen()).toBe("#E$rnbq1rk1E/E$pppp1pppE/E$5n2E/E$2b1p3E/E$4P3E/E$2N2N2E/E$PPPP1PPPE/E$R1BQKB1RE w - - 1 4");
+        expect(chess.getCurrentFen()).toBe("E$EEEEEEEEE/#E$rnbq1rk1E/E$pppp1pppE/E$5n2E/E$2b1p3E/E$4P3E/E$2N2N2E/E$PPPP1PPPE/E$R1BQKB1RE/E$EEEEEEEEE w - - 1 4");
         expect(chess.getMoveHistory()).toEqual(["bK|e8|g8"]);
     })
 
@@ -112,7 +112,7 @@ describe("do move",()=>{
             targetSquare: "c1"
         }
         chess.moveFromBoard(move);
-        expect(chess.getCurrentFen()).toBe("#E$r3kbnrE/E$pppbqpppE/E$2np4E/E$4p3E/E$3PP3E/E$2N1B3E/E$PPP1QPPPE/E$2KR1BNRE b kq - 1 5");
+        expect(chess.getCurrentFen()).toBe("E$EEEEEEEEE/#E$r3kbnrE/E$pppbqpppE/E$2np4E/E$4p3E/E$3PP3E/E$2N1B3E/E$PPP1QPPPE/E$2KR1BNRE/E$EEEEEEEEE b kq - 1 5");
         expect(chess.getMoveHistory()).toEqual(["wK|e1|c1"]);
     })
 
@@ -137,7 +137,7 @@ describe("do move",()=>{
             targetSquare: "c8"
         }
         chess.moveFromBoard(move);
-        expect(chess.getCurrentFen()).toBe("#E$2kr1bnrE/E$pppbqpppE/E$2np4E/E$4p3E/E$3PP3E/E$2N1B3E/E$PPP1QPPPE/E$R3KBNRE w KQ - 1 6");
+        expect(chess.getCurrentFen()).toBe("E$EEEEEEEEE/#E$2kr1bnrE/E$pppbqpppE/E$2np4E/E$4p3E/E$3PP3E/E$2N1B3E/E$PPP1QPPPE/E$R3KBNRE/E$EEEEEEEEE w KQ - 1 6");
         expect(chess.getMoveHistory()).toEqual(["bK|e8|c8"]);
     })
 
@@ -156,7 +156,7 @@ describe("do move",()=>{
             }
         );
         chess.moveFromNotation("bK|e8|c8");
-        expect(chess.getCurrentFen()).toBe("#E$2kr1bnrE/E$pppbqpppE/E$2np4E/E$4p3E/E$3PP3E/E$2N1B3E/E$PPP1QPPPE/E$R3KBNRE w KQ - 1 6");
+        expect(chess.getCurrentFen()).toBe("E$EEEEEEEEE/#E$2kr1bnrE/E$pppbqpppE/E$2np4E/E$4p3E/E$3PP3E/E$2N1B3E/E$PPP1QPPPE/E$R3KBNRE/E$EEEEEEEEE w KQ - 1 6");
         expect(chess.getMoveHistory()).toEqual(["bK|e8|c8"]);
     })
 
@@ -181,7 +181,7 @@ describe("do move",()=>{
             targetSquare: "e3"
         }
         chess.moveFromBoard(move);
-        expect(chess.getCurrentFen()).toBe("#E$rnbqkbnrE/E$ppppp1ppE/E$8E/E$8E/E$8E/E$4p3E/E$PPPP1PPPE/E$RNBQKBNRE w KQkq - 0 4");
+        expect(chess.getCurrentFen()).toBe("E$EEEEEEEEE/#E$rnbqkbnrE/E$ppppp1ppE/E$8E/E$8E/E$8E/E$4p3E/E$PPPP1PPPE/E$RNBQKBNRE/E$EEEEEEEEE w KQkq - 0 4");
         expect(chess.getMoveHistory()).toEqual(["bP|f4|e3"]);
     })
 
@@ -206,7 +206,7 @@ describe("do move",()=>{
             targetSquare: "e6"
         }
         chess.moveFromBoard(move);
-        expect(chess.getCurrentFen()).toBe("#E$rnbqkbnrE/E$pppp1pp1E/E$4P2pE/E$8E/E$8E/E$8E/E$PPP1PPPPE/E$RNBQKBNRE b KQkq - 0 1");
+        expect(chess.getCurrentFen()).toBe("E$EEEEEEEEE/#E$rnbqkbnrE/E$pppp1pp1E/E$4P2pE/E$8E/E$8E/E$8E/E$PPP1PPPPE/E$RNBQKBNRE/E$EEEEEEEEE b KQkq - 0 1");
         expect(chess.getMoveHistory()).toEqual(["wP|d5|e6"]);
     })
 })

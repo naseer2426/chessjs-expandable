@@ -127,7 +127,7 @@ export class Chess {
     private isLegalMove(move:Move):boolean {
         if (move.moveType === MoveType.EXTEND) {
             const expandSqIdx = this.board.locationToIdx[move.expandLocation!];
-            if (expandSqIdx === null) {
+            if (!expandSqIdx) {
                 return false;
             }
             const expandSq = getSquare(expandSqIdx.row, expandSqIdx.col, this.board);
@@ -203,9 +203,6 @@ export class Chess {
     private getBoardFen():string {
         let boardFen = "";
         this.board.rows.forEach(row => {
-            if (areAllSqNonExistent(row)) {
-                return;
-            }
             boardFen += getRowFen(row) + "/";
         })
         return boardFen.slice(0, -1); // to remove the last "/"
@@ -258,14 +255,6 @@ export class Chess {
     //used for testing
     public getLocationToPiece():{[key: string]: string} {
         return this.locationToPiece;
-    }
-
-    public getDebugFen():string {
-        let boardFen = "";
-        this.board.rows.forEach(row => {
-            boardFen += getRowFen(row) + "/";
-        })
-        return boardFen.slice(0, -1); // to remove the last "/"
     }
 }
 

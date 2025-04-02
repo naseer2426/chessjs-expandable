@@ -66,6 +66,10 @@ export function getRowFen(row: Row): string {
     let currEmptySqCount = 0;
     row.forEach(square => {
         if (addFileDisambiguator && square.file === "a") {
+            if (currEmptySqCount > 0) {
+                rowFen += currEmptySqCount.toString();
+                currEmptySqCount = 0;
+            }
             rowFen += "$";
         }
         if (square.piece === EMPTY_SQUARE) {
