@@ -158,8 +158,8 @@ export class Chess {
         )
         const matchingMove = legalPieceMoves.find((m)=>m.moveType === move.moveType &&
             m.sourceSquare === move.sourceSquare &&
-            m.targetSquare === move.targetSquare &&
-            m.piece === move.piece
+            m.targetSquare === move.targetSquare
+            // not checking if piece may be different from the piece on board during promotion
         );
         return !!matchingMove;
     }
