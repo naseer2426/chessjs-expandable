@@ -99,7 +99,7 @@ export function isCastleLegal(
         locationToPiece, 
         opponentColor, 
         /* 
-            there may be en passant possible but it can never block king side castle so passing null
+            there may be en passant possible but it can never block castle so passing null
             so passing null to prevent passing en passant target in the whole callchain
         */
         null, 

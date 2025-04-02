@@ -71,6 +71,20 @@ export const castlingRightUpdates = (move:Move):Partial<CastlingRights> => {
     if (move.moveType !== MoveType.MOVE) {
         return {};
     }
+    // something may be capturing the rook
+    if (move.targetSquare! === "a1") {
+        return {Q:false}
+    }
+    if (move.targetSquare! === "h1") {
+        return {K:false}
+    }
+    if (move.targetSquare! === "a8") {
+        return {q:false}
+    }
+    if (move.targetSquare! === "h8") {
+        return {k:false}
+    }
+    // moving the rook or the queen
     if (move.piece!.slice(1).toLowerCase() !== "r" && move.piece!.slice(1).toLowerCase() !== "k") {
         return {};
     }
