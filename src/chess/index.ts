@@ -67,7 +67,7 @@ export class Chess {
 
     public new():Chess {
         return new Chess(
-            this.defaultFen, 
+            this.getCurrentFen(), 
             this.board.horizontalExtendLimit, 
             this.board.verticalExtendLimit, 
             this.board.horizontalAddUnit, 
