@@ -65,6 +65,16 @@ export class Chess {
         this.moveHistory = []
     }
 
+    public new():Chess {
+        return new Chess(
+            this.defaultFen, 
+            this.board.horizontalExtendLimit, 
+            this.board.verticalExtendLimit, 
+            this.board.horizontalAddUnit, 
+            this.board.verticalAddUnit,
+        )
+    }
+
     public moveFromBoard(move:Move):boolean {
         if (!this.isLegalMove(move)) {
             return false;
