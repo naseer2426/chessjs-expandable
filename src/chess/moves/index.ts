@@ -135,7 +135,7 @@ function haveCastlingRights(
     kingSide: boolean
 ):boolean {
     if (color === "w") {
-        kingSide ? castlingRights.K : castlingRights.Q;
+        return kingSide ? castlingRights.K : castlingRights.Q;
     }
     return kingSide ? castlingRights.k : castlingRights.q;
 }
