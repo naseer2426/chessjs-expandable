@@ -20,7 +20,6 @@ import {
     getCastlingRightsNotation
 } from "./fen"
 import {boardMoveToNotation, notationToBoardMove} from "./notation"
-import {areAllSqNonExistent} from "./squares"
 import { 
     castlingRightUpdates, 
     getEnPassantTargetSq, 
@@ -255,6 +254,9 @@ export class Chess {
     //used for testing
     public getLocationToPiece():{[key: string]: string} {
         return this.locationToPiece;
+    }
+    public getTurn():"w"|"b" {
+        return this.turn
     }
 }
 
