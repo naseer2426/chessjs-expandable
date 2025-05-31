@@ -255,8 +255,15 @@ export class Chess {
     public getLocationToPiece():{[key: string]: string} {
         return this.locationToPiece;
     }
-    public getTurn():"w"|"b" {
-        return this.turn
+    public getTurn():"white"|"black" {
+        /* 
+            the reason I am not returning "w"|"b" here is because the
+            platform code is cleaner if we can check getTurn() == clientType
+        */
+        if (this.turn == "w") {
+            return "white"
+        }
+        return "black"
     }
 }
 
