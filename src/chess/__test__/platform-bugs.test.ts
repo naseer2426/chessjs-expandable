@@ -23,4 +23,16 @@ describe("Bugs found during platform testing",()=>{
         const legalMoves = chess.legalMoves()
         expect(legalMoves.length).toEqual(0)
     })
+
+    test("pawn push 2 squares",()=>{
+        const chess = new Chess(
+            "EE$EEEEEEEEEE/EE$EEEEEEEEEE/#EE$rnbqkbnrEE/EE$ppppppp1EE/EE$6N1EE/EE$7pEE/EE$8EE/EE$8EE/EE$PPPPPPPPEE/EE$RNBQKB1REE/EE$EEEEEEEEEE/EE$EEEEEEEEEE b KQkq - 1 3",
+            4,
+            2,
+            {x:2,y:2},
+            {x:2,y:2},
+        )
+        const legal = chess.moveFromNotation("bP|g7|g5")
+        expect(legal).toBe(false);
+    })
 })

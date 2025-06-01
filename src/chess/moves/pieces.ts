@@ -74,8 +74,9 @@ export const pawnMoves = (origin: string, board:Board, enPassantSq:string|null):
     }
 
     const advance2Sq = getSquare(originIdx.row + 2 * direction, originIdx.col, board);
+    const passingSq = getSquare(originIdx.row + 1 * direction, originIdx.col, board);
     if ((color === "w" && origin.slice(1)=== '2' || color === "b" && origin.slice(1)=== '7') && 
-        advance2Sq && advance2Sq.piece === EMPTY_SQUARE) {
+        advance2Sq && advance2Sq.piece === EMPTY_SQUARE && passingSq && passingSq.piece === EMPTY_SQUARE) {
         moves.push({
             moveType:MoveType.MOVE,
             sourceSquare:origin,
