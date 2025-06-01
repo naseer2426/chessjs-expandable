@@ -12,4 +12,15 @@ describe("Bugs found during platform testing",()=>{
         const valid = chess.moveFromNotation("wK|e1|c1")
         expect(valid).toEqual(true)
     })
+    test("stalemate bug",()=>{
+        const chess = new Chess(
+            "E3$7E2EE/E3$7Ek3/#E2E$8EE1Q/E2E$8K2B/4$P11/4$12/2EE$1P10/4$2P9/4$P11/2EE$8EE2/4$E6E4/4$E6E2EE b - b3 0 71",
+            4,
+            2,
+            {x:2,y:2},
+            {x:2,y:2},
+        )
+        const legalMoves = chess.legalMoves()
+        expect(legalMoves.length).toEqual(0)
+    })
 })

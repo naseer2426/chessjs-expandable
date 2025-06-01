@@ -104,6 +104,10 @@ export class Chess {
                 if (sq.piece !== NON_EXISTENT_SQUARE) {
                     return;
                 }
+                const unitSqIdxs = this.board.locationToUnitSqIdxs[`${sq.file}${sq.rank}`]
+                if (unitSqIdxs.length == 0) {
+                    return;
+                }
                 const extendMove:Move = {
                     expandLocation: `${sq.file}${sq.rank}`,
                     moveType: MoveType.EXTEND
@@ -134,6 +138,10 @@ export class Chess {
                 return false;
             }
             if (expandSq.piece !== NON_EXISTENT_SQUARE) {
+                return false;
+            }
+            const unitSqIdxs = this.board.locationToUnitSqIdxs[`${expandSq.file}${expandSq.rank}`]
+            if (unitSqIdxs.length == 0) {
                 return false;
             }
             return !isKingExposedAfterMove(
